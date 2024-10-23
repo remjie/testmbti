@@ -1,0 +1,383 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <title>Test de Personnalité MBTI</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 20px;
+        }
+
+        #container {
+            background-color: #fff;
+            padding: 20px 40px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            width: 100%;
+            max-width: 600px;
+            text-align: center;
+        }
+
+        h1 {
+            margin-bottom: 20px;
+        }
+
+        button {
+            background-color: #007BFF;
+            color: #fff;
+            border: none;
+            padding: 15px 30px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+
+        button:hover {
+            background-color: #0056b3;
+        }
+
+        .question {
+            margin-bottom: 20px;
+        }
+
+        .options {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
+        }
+
+        .options label {
+            margin: 10px 0;
+        }
+
+        #nextBtn {
+            background-color: #28a745;
+        }
+
+        #nextBtn:hover {
+            background-color: #218838;
+        }
+
+        #result {
+            text-align: left;
+        }
+
+        .type-description {
+            margin-top: 20px;
+            text-align: left;
+        }
+    </style>
+</head>
+<body>
+    <div id="container">
+        <h1>Test de Personnalité MBTI</h1>
+        <button id="startBtn">Commencer</button>
+
+        <div id="questionnaire" style="display: none;">
+            <div id="questionContainer">
+                <div id="questionNumber"></div>
+                <div class="question" id="questionText"></div>
+                <div class="options" id="optionsContainer"></div>
+            </div>
+            <button id="nextBtn">Suivant</button>
+        </div>
+
+        <div id="result" style="display: none;">
+            <h2>Votre Type MBTI : <span id="type"></span></h2>
+            <div class="type-description" id="typeDescription"></div>
+        </div>
+    </div>
+
+    <script>
+        // Définition des questions
+        const questions = {
+            IE: [
+                {
+                    question: "Après une longue journée de travail ou d'activités sociales, comment préfères-tu recharger tes batteries ?",
+                    options: {
+                        A: "Je préfère être entouré(e) de gens ou participer à des activités sociales pour me ressourcer.",
+                        B: "Je préfère passer du temps seul(e) ou dans un environnement calme pour récupérer."
+                    },
+                    type: "IE",
+                    value: { A: "E", B: "I" }
+                },
+                {
+                    question: "Dans une situation sociale, que fais-tu naturellement ?",
+                    options: {
+                        A: "Je prends facilement l'initiative de parler, j'aime rencontrer de nouvelles personnes et j'apprécie les discussions spontanées.",
+                        B: "Je préfère observer les autres avant de me lancer dans une conversation et je me sens plus à l'aise dans les petits groupes ou en tête-à-tête."
+                    },
+                    type: "IE",
+                    value: { A: "E", B: "I" }
+                },
+                {
+                    question: "Lorsque tu prends des décisions, que fais-tu souvent ?",
+                    options: {
+                        A: "Je préfère discuter mes idées avec les autres avant de me décider.",
+                        B: "Je préfère réfléchir par moi-même avant de partager mes idées."
+                    },
+                    type: "IE",
+                    value: { A: "E", B: "I" }
+                }
+            ],
+            SN: [
+                {
+                    question: "Comment traites-tu les informations au quotidien ?",
+                    options: {
+                        A: "Je me concentre sur les faits concrets et les détails présents.",
+                        B: "Je me concentre sur les possibilités futures et les idées abstraites."
+                    },
+                    type: "SN",
+                    value: { A: "S", B: "N" }
+                },
+                {
+                    question: "Quand tu racontes une histoire, que fais-tu ?",
+                    options: {
+                        A: "J’inclus des détails spécifiques et je me concentre sur ce qui s'est réellement passé.",
+                        B: "Je me concentre sur le sens global et les implications sous-jacentes."
+                    },
+                    type: "SN",
+                    value: { A: "S", B: "N" }
+                },
+                {
+                    question: "Comment préfères-tu aborder les problèmes ?",
+                    options: {
+                        A: "En adoptant une approche pratique et en me basant sur l'expérience passée.",
+                        B: "En explorant de nouvelles idées et en imaginant différentes solutions."
+                    },
+                    type: "SN",
+                    value: { A: "S", B: "N" }
+                }
+            ],
+            TF: [
+                {
+                    question: "Lorsqu’il s'agit de prendre une décision, comment procèdes-tu ?",
+                    options: {
+                        A: "Je prends mes décisions en fonction de la logique et des faits.",
+                        B: "Je prends mes décisions en fonction de mes valeurs et de l’impact sur les autres."
+                    },
+                    type: "TF",
+                    value: { A: "T", B: "F" }
+                },
+                {
+                    question: "Comment abordes-tu les conflits ?",
+                    options: {
+                        A: "Je préfère aborder les conflits de manière directe et résoudre les problèmes de façon rationnelle.",
+                        B: "Je préfère aborder les conflits en tenant compte des émotions et en cherchant l'harmonie."
+                    },
+                    type: "TF",
+                    value: { A: "T", B: "F" }
+                },
+                {
+                    question: "Que privilégies-tu dans ton environnement de travail ?",
+                    options: {
+                        A: "L’efficacité et l’objectivité.",
+                        B: "L’harmonie et les bonnes relations interpersonnelles."
+                    },
+                    type: "TF",
+                    value: { A: "T", B: "F" }
+                }
+            ],
+            JP: [
+                {
+                    question: "Comment gères-tu tes projets et ton emploi du temps ?",
+                    options: {
+                        A: "J’aime planifier à l’avance et suivre un emploi du temps structuré.",
+                        B: "Je préfère rester flexible et improviser en fonction des circonstances."
+                    },
+                    type: "JP",
+                    value: { A: "J", B: "P" }
+                },
+                {
+                    question: "Comment réagis-tu aux délais ou échéances ?",
+                    options: {
+                        A: "J’aime terminer mes tâches bien avant la date limite.",
+                        B: "Je préfère commencer quand l’inspiration me vient et je travaille souvent jusqu'à la dernière minute."
+                    },
+                    type: "JP",
+                    value: { A: "J", B: "P" }
+                },
+                {
+                    question: "Que ressens-tu face à l’imprévu ?",
+                    options: {
+                        A: "Je me sens stressé(e) par l'incertitude et préfère les choses planifiées.",
+                        B: "Je m'adapte facilement aux changements et préfère garder mes options ouvertes."
+                    },
+                    type: "JP",
+                    value: { A: "J", B: "P" }
+                }
+            ]
+        };
+
+        // Définition des types MBTI avec descriptions
+		/* old
+        const mbtiTypes = {
+            "INTJ": "Les INTJ sont des stratèges innovants, aimant planifier et organiser avec une vision à long terme.",
+            "INTP": "Les INTP sont des penseurs analytiques, curieux et passionnés par la compréhension des principes sous-jacents.",
+            "ENTJ": "Les ENTJ sont des leaders naturels, déterminés et efficaces dans la réalisation de leurs objectifs.",
+            "ENTP": "Les ENTP sont des inventeurs créatifs, aimant débattre et explorer de nouvelles idées.",
+            "INFJ": "Les INFJ sont des conseillers empathiques, guidés par leurs valeurs et désireux d'aider les autres.",
+            "INFP": "Les INFP sont des idéalistes sensibles, cherchant à comprendre leur monde intérieur et à exprimer leur créativité.",
+            "ENFJ": "Les ENFJ sont des leaders charismatiques, inspirant les autres et favorisant l'harmonie.",
+            "ENFP": "Les ENFP sont des créateurs enthousiastes, aimant explorer de nouvelles possibilités et établir des connexions.",
+            "ISTJ": "Les ISTJ sont des logisticiens fiables, appréciant l'ordre, la responsabilité et la tradition.",
+            "ISFJ": "Les ISFJ sont des protecteurs dévoués, attentifs aux besoins des autres et soucieux de maintenir la paix.",
+            "ESTJ": "Les ESTJ sont des organisateurs pragmatiques, valorisant l'efficacité, les règles et la structure.",
+            "ESFJ": "Les ESFJ sont des fournisseurs chaleureux, soucieux des relations et du bien-être de leur communauté.",
+            "ISTP": "Les ISTP sont des artisans pragmatiques, appréciant la liberté, la flexibilité et la résolution de problèmes concrets.",
+            "ISFP": "Les ISFP sont des artistes tranquilles, valorisant l'harmonie, la beauté et les expériences sensorielles.",
+            "ESTP": "Les ESTP sont des entrepreneurs dynamiques, aimant l'action, les défis et les interactions sociales.",
+            "ESFP": "Les ESFP sont des animateurs enthousiastes, appréciant les moments présents, les interactions sociales et les expériences vivantes."
+        }; */
+		const mbtiTypes = {
+			"INTJ": "Les **INTJ** (Introversion, Intuition, Thinking, Judging) sont souvent appelés les « Architectes ». Ils sont stratégiques, analytiques et visionnaires, aimant planifier à long terme et résoudre des problèmes complexes. Leur esprit logique et leur capacité à voir les schémas globaux leur permettent de développer des solutions innovantes. Bien qu'ils puissent paraître réservés, ils sont passionnés par leurs idées et déterminés à les réaliser. Les INTJ valorisent l'efficacité et l'autonomie, préférant travailler seuls ou dans des environnements où leurs compétences sont reconnues et respectées.",
+			
+			"INTP": "Les **INTP** (Introversion, Intuition, Thinking, Perceiving) sont connus comme les « Penseurs » ou les « Logiciens ». Ils sont curieux, analytiques et passionnés par la compréhension des principes sous-jacents qui régissent le monde. Les INTP aiment explorer des idées abstraites, théoriques et innovantes, et sont souvent attirés par les domaines scientifiques, technologiques ou philosophiques. Leur nature indépendante et leur désir de liberté intellectuelle les poussent à remettre en question les conventions et à rechercher des connaissances approfondies. Bien qu'ils puissent sembler distants, les INTP sont loyaux envers ceux qu'ils considèrent comme dignes de confiance.",
+			
+			"ENTJ": "Les **ENTJ** (Extraversion, Intuition, Thinking, Judging) sont souvent désignés comme les « Commandants ». Ils sont naturels leaders, déterminés et orientés vers les objectifs. Les ENTJ excellent dans la planification stratégique et la gestion de projets complexes, utilisant leur logique et leur vision pour guider les équipes vers le succès. Ils sont ambitieux, compétitifs et apprécient les défis intellectuels. Les ENTJ sont également connus pour leur capacité à prendre des décisions rapides et efficaces, ainsi que pour leur désir constant d'amélioration et de perfectionnement, tant pour eux-mêmes que pour leur environnement.",
+			
+			"ENTP": "Les **ENTP** (Extraversion, Intuition, Thinking, Perceiving) sont appelés les « Innovateurs » ou les « Débateurs ». Ils sont créatifs, ingénieux et aiment explorer de nouvelles idées et possibilités. Les ENTP sont souvent attirés par des environnements dynamiques où ils peuvent exercer leur pensée critique et leur capacité à résoudre des problèmes de manière originale. Ils aiment débattre et tester les limites des idées existantes, ce qui les rend excellents pour identifier des opportunités et proposer des solutions novatrices. Leur enthousiasme et leur énergie contagieuse les rendent souvent populaires dans les groupes sociaux, bien qu'ils puissent parfois être perçus comme impétueux ou imprévisibles.",
+			
+			"INFJ": "Les **INFJ** (Introversion, Intuition, Feeling, Judging) sont souvent appelés les « Conseillers » ou les « Protecteurs ». Ils sont empathiques, idéalistes et profondément engagés envers leurs valeurs personnelles et le bien-être des autres. Les INFJ possèdent une intuition puissante qui leur permet de comprendre les motivations et les sentiments des personnes qui les entourent. Ils sont passionnés par les causes humanitaires et cherchent à apporter des changements positifs dans le monde. Leur nature réservée est compensée par leur désir de créer des connexions significatives et authentiques, tant dans leur vie personnelle que professionnelle.",
+			
+			"INFP": "Les **INFP** (Introversion, Intuition, Feeling, Perceiving) sont connus comme les « Idéalistes » ou les « Médiateurs ». Ils sont sensibles, créatifs et guidés par leurs valeurs profondes. Les INFP aspirent à vivre en accord avec leurs idéaux et cherchent à exprimer leur individualité à travers des moyens artistiques ou créatifs. Ils sont empathiques et compréhensifs, ce qui les rend excellents pour soutenir et encourager les autres. Les INFP préfèrent souvent des environnements de travail flexibles et harmonieux, où ils peuvent explorer leurs passions et contribuer de manière significative. Leur quête de sens et d'authenticité les pousse à rechercher des relations profondes et enrichissantes.",
+			
+			"ENFJ": "Les **ENFJ** (Extraversion, Intuition, Feeling, Judging) sont souvent appelés les « Protagonistes » ou les « Leaders Charismatiques ». Ils sont naturellement sociables, empathiques et dotés d'une grande capacité à inspirer et motiver les autres. Les ENFJ excellent dans la communication et la création de relations harmonieuses, ce qui les rend efficaces dans des rôles de leadership et de gestion des équipes. Ils sont profondément engagés envers les valeurs humaines et cherchent à promouvoir le bien-être collectif. Les ENFJ sont également orientés vers l'avenir et utilisent leur intuition pour anticiper les besoins et les aspirations des personnes qu'ils dirigent, travaillant sans relâche pour créer un environnement positif et inclusif.",
+			
+			"ENFP": "Les **ENFP** (Extraversion, Intuition, Feeling, Perceiving) sont connus comme les « Champions » ou les « Inspirateurs ». Ils sont enthousiastes, créatifs et dotés d'une grande énergie pour explorer de nouvelles idées et expériences. Les ENFP aiment établir des connexions profondes avec les autres et sont souvent perçus comme chaleureux et accessibles. Leur intuition leur permet de voir les possibilités infinies et de s'adapter facilement aux changements, ce qui les rend excellents dans des environnements dynamiques et innovants. Les ENFP sont également guidés par leurs valeurs personnelles et cherchent à aligner leurs actions avec leurs convictions, ce qui les pousse à s'engager dans des causes qui leur tiennent à cœur.",
+			
+			"ISTJ": "Les **ISTJ** (Introversion, Sensation, Thinking, Judging) sont souvent appelés les « Logisticiennes » ou les « Inspecteurs ». Ils sont fiables, méthodiques et apprécient l'ordre et la structure dans tous les aspects de leur vie. Les ISTJ sont orientés vers les détails et possèdent une grande capacité à gérer des tâches complexes avec précision et efficacité. Ils respectent les traditions et les règles établies, cherchant à maintenir la stabilité et la continuité. Leur sens du devoir et leur responsabilité les rendent dignes de confiance et constants dans leurs engagements, tant dans leur vie professionnelle que personnelle. Les ISTJ excellent dans des environnements où la clarté, la logique et la planification sont valorisées.",
+			
+			"ISFJ": "Les **ISFJ** (Introversion, Sensation, Feeling, Judging) sont connus comme les « Protecteurs » ou les « Défenseurs ». Ils sont attentionnés, dévoués et profondément préoccupés par le bien-être des autres. Les ISFJ possèdent une grande capacité à se souvenir des détails personnels et à anticiper les besoins des personnes qui les entourent, ce qui les rend excellents dans des rôles de soutien et de service. Ils valorisent la tradition et la stabilité, cherchant à créer un environnement harmonieux et sécurisé. Les ISFJ sont également fidèles et responsables, prenant leurs engagements très au sérieux et travaillant diligemment pour assurer la satisfaction et le confort de ceux qu'ils aident.",
+			
+			"ESTJ": "Les **ESTJ** (Extraversion, Sensation, Thinking, Judging) sont souvent appelés les « Administrateurs » ou les « Superviseurs ». Ils sont pratiques, organisés et excellents dans la gestion des ressources et des personnes. Les ESTJ aiment structurer leur environnement et s'assurent que les règles et les procédures sont suivies avec rigueur. Leur sens de l'organisation et leur capacité à prendre des décisions logiques les rendent efficaces dans des rôles de leadership et de gestion. Les ESTJ valorisent l'efficacité, la productivité et la responsabilité, cherchant constamment à optimiser les processus et à atteindre les objectifs fixés. Ils sont également directs et francs dans leur communication, préférant la clarté et la précision.",
+			
+			"ESFJ": "Les **ESFJ** (Extraversion, Sensation, Feeling, Judging) sont connus comme les « Fournisseurs » ou les « Consuls ». Ils sont chaleureux, sociables et profondément engagés dans la création de relations harmonieuses. Les ESFJ excellent dans la gestion des dynamiques sociales et sont souvent le cœur de leurs communautés, cherchant à soutenir et à aider les autres de manière pratique. Ils sont attentifs aux besoins des personnes qui les entourent et s'efforcent de créer un environnement accueillant et inclusif. Les ESFJ valorisent la tradition, la coopération et la loyauté, travaillant diligemment pour maintenir la paix et l'ordre dans leurs relations personnelles et professionnelles.",
+			
+			"ISTP": "Les **ISTP** (Introversion, Sensation, Thinking, Perceiving) sont souvent appelés les « Artisans » ou les « Virtuoses ». Ils sont pragmatiques, indépendants et dotés d'une grande capacité à résoudre des problèmes concrets de manière efficace. Les ISTP aiment explorer le monde qui les entoure à travers leurs sens, appréciant les activités pratiques et manuelles qui leur permettent de manipuler et de comprendre les objets et les systèmes. Leur nature adaptable et leur flexibilité leur permettent de s'ajuster rapidement aux changements et aux défis imprévus. Les ISTP préfèrent souvent travailler de manière autonome, cherchant la liberté et l'indépendance dans leurs projets et leurs activités.",
+			
+			"ISFP": "Les **ISFP** (Introversion, Sensation, Feeling, Perceiving) sont connus comme les « Artistes » ou les « Aventuriers ». Ils sont sensibles, créatifs et apprécient l'esthétique et la beauté dans toutes ses formes. Les ISFP aiment vivre dans l'instant présent et sont souvent attirés par des activités artistiques ou artisanales qui leur permettent d'exprimer leur individualité et leur créativité. Ils sont chaleureux et attentionnés, cherchant à créer des environnements harmonieux et agréables pour eux-mêmes et pour les autres. Les ISFP valorisent la liberté et l'autonomie, préférant souvent suivre leur propre rythme et leurs propres intérêts plutôt que de se conformer à des structures rigides.",
+			
+			"ESTP": "Les **ESTP** (Extraversion, Sensation, Thinking, Perceiving) sont souvent appelés les « Entrepreneurs » ou les « Dynamiqueurs ». Ils sont énergiques, audacieux et aiment relever des défis stimulants. Les ESTP sont orientés vers l'action et préfèrent apprendre en faisant, appréciant les environnements rapides et changeants où ils peuvent utiliser leur réactivité et leur capacité à prendre des décisions rapides. Ils sont sociables et charismatiques, aimant interagir avec les autres et souvent au centre de l'attention. Les ESTP sont également pragmatiques et efficaces, excellant dans la résolution de problèmes pratiques et la gestion de situations d'urgence avec calme et assurance.",
+			
+			"ESFP": "Les **ESFP** (Extraversion, Sensation, Feeling, Perceiving) sont connus comme les « Animateurs » ou les « Performers ». Ils sont enthousiastes, sociables et aiment vivre pleinement chaque instant. Les ESFP apprécient les interactions sociales et sont souvent le cœur des fêtes et des rassemblements, apportant énergie et joie aux personnes qui les entourent. Ils sont attentifs aux détails sensoriels et trouvent du plaisir dans les expériences concrètes et tangibles, qu'il s'agisse de musique, d'art, de danse ou d'activités physiques. Les ESFP sont également flexibles et spontanés, préférant s'adapter aux circonstances plutôt que de suivre des plans stricts. Leur nature chaleureuse et généreuse les rend aimés et respectés dans leurs cercles sociaux."
+		};
+
+
+        let selectedQuestions = [];
+        let currentQuestionIndex = 0;
+        let scores = { E: 0, I: 0, S: 0, N: 0, T: 0, F: 0, J: 0, P: 0 };
+
+        const startBtn = document.getElementById('startBtn');
+        const questionnaire = document.getElementById('questionnaire');
+        const resultDiv = document.getElementById('result');
+        const questionText = document.getElementById('questionText');
+        const optionsContainer = document.getElementById('optionsContainer');
+        const nextBtn = document.getElementById('nextBtn');
+        const typeSpan = document.getElementById('type');
+        const typeDescription = document.getElementById('typeDescription');
+        const questionNumber = document.getElementById('questionNumber');
+
+        // Fonction pour mélanger les questions
+        function shuffle(array) {
+            for (let i = array.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [array[i], array[j]] = [array[j], array[i]];
+            }
+            return array;
+        }
+
+        // Préparer les questions
+        function prepareQuestions() {
+            selectedQuestions = [];
+            // Sélectionner 3 questions de chaque type
+            for (let key in questions) {
+                selectedQuestions = selectedQuestions.concat(questions[key]);
+            }
+            // Mélanger les questions
+            shuffle(selectedQuestions);
+            // Limiter à 12 questions (3 de chaque type)
+            selectedQuestions = selectedQuestions.slice(0, 12);
+        }
+
+        // Afficher une question
+        function showQuestion() {
+            if (currentQuestionIndex < selectedQuestions.length) {
+                const q = selectedQuestions[currentQuestionIndex];
+                questionNumber.textContent = `Question ${currentQuestionIndex + 1} sur ${selectedQuestions.length}`;
+                questionText.textContent = q.question;
+                optionsContainer.innerHTML = '';
+
+                for (let option in q.options) {
+                    const label = document.createElement('label');
+                    const input = document.createElement('input');
+                    input.type = 'radio';
+                    input.name = 'option';
+                    input.value = option;
+                    label.appendChild(input);
+                    label.appendChild(document.createTextNode(q.options[option]));
+                    optionsContainer.appendChild(label);
+                }
+            }
+        }
+
+        // Calculer le résultat MBTI
+        function calculateResult() {
+            let type = '';
+            type += scores.E > scores.I ? 'E' : 'I';
+            type += scores.S > scores.N ? 'S' : 'N';
+            type += scores.T > scores.F ? 'T' : 'F';
+            type += scores.J > scores.P ? 'J' : 'P';
+            return type;
+        }
+
+        // Afficher le résultat
+        function showResult() {
+            const mbti = calculateResult();
+            typeSpan.textContent = mbti;
+            typeDescription.textContent = mbtiTypes[mbti] || "Description non disponible.";
+            questionnaire.style.display = 'none';
+            resultDiv.style.display = 'block';
+        }
+
+        // Réinitialiser le questionnaire
+        function resetQuiz() {
+            currentQuestionIndex = 0;
+            scores = { E: 0, I: 0, S: 0, N: 0, T: 0, F: 0, J: 0, P: 0 };
+            prepareQuestions();
+            showQuestion();
+        }
+
+        // Événement de démarrage
+        startBtn.addEventListener('click', () => {
+            startBtn.style.display = 'none';
+            questionnaire.style.display = 'block';
+            resetQuiz();
+        });
+
+        // Événement pour le bouton Suivant
+        nextBtn.addEventListener('click', () => {
+            const selectedOption = document.querySelector('input[name="option"]:checked');
+            if (!selectedOption) {
+                alert("Veuillez sélectionner une réponse avant de continuer.");
+                return;
+            }
+            const q = selectedQuestions[currentQuestionIndex];
+            const answer = selectedOption.value;
+            const trait = q.value[answer];
+            scores[trait]++;
+            currentQuestionIndex++;
+            if (currentQuestionIndex < selectedQuestions.length) {
+                showQuestion();
+            } else {
+                showResult();
+            }
+        });
+    </script>
+</body>
+</html>
