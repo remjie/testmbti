@@ -267,7 +267,140 @@
 			
 			"ESFP": "Les **ESFP** (Extraversion, Sensation, Feeling, Perceiving) sont connus comme les « Animateurs » ou les « Performers ». Ils sont enthousiastes, sociables et aiment vivre pleinement chaque instant. Les ESFP apprécient les interactions sociales et sont souvent le cœur des fêtes et des rassemblements, apportant énergie et joie aux personnes qui les entourent. Ils sont attentifs aux détails sensoriels et trouvent du plaisir dans les expériences concrètes et tangibles, qu'il s'agisse de musique, d'art, de danse ou d'activités physiques. Les ESFP sont également flexibles et spontanés, préférant s'adapter aux circonstances plutôt que de suivre des plans stricts. Leur nature chaleureuse et généreuse les rend aimés et respectés dans leurs cercles sociaux."
 		};
-
+		
+		const mbtiCompatibility = {
+			"INFP": {
+				ideal: ["ENFJ", "INFJ", "INTJ"],
+				good: ["ENFP", "ENTP", "ISFP"],
+				oneSided: ["INTP", "ENTJ"],
+				notIdeal: ["ISFJ", "ISTJ", "ESFJ"],
+				uhOh: ["ESTJ", "ESTP"]
+			},
+			"ENFP": {
+				ideal: ["INFJ", "INTJ", "ENTP"],
+				good: ["INFP", "ENFJ", "ENTJ"],
+				oneSided: ["ISFP", "INTP", "ESTP"],
+				notIdeal: ["ISTP", "ESFJ", "ISFJ"],
+				uhOh: ["ESTJ", "ISTJ"]
+			},
+			"INFJ": {
+				ideal: ["ENFJ", "INTJ", "INFP"],
+				good: ["ENFP", "ENTJ", "INTP"],
+				oneSided: ["ISFP", "ISTJ", "ISFJ"],
+				notIdeal: ["ESTP", "ESFP", "ESTJ"],
+				uhOh: ["ISTP"]
+			},
+			"ENFJ": {
+				ideal: ["INFJ", "INTJ", "ENTJ"],
+				good: ["ENFP", "INFP", "INTP"],
+				oneSided: ["ESFJ", "ISFJ", "ESTP"],
+				notIdeal: ["ISTP", "ESTJ", "ISTJ"],
+				uhOh: ["ESFP", "ISFP"]
+			},
+			"INTJ": {
+				ideal: ["INFJ", "ENFJ", "INFP"],
+				good: ["ENTP", "ENFP", "ENTJ"],
+				oneSided: ["ISFP", "INTP", "ESTJ"],
+				notIdeal: ["ISTP", "ESFJ", "ISFJ"],
+				uhOh: ["ESTP"]
+			},
+			"ENTJ": {
+				ideal: ["INFJ", "INTJ", "ENTP"],
+				good: ["ENFP", "ENFJ", "INFP"],
+				oneSided: ["INTP", "ESTJ", "ISFP"],
+				notIdeal: ["ISFJ", "ISTJ", "ESFJ"],
+				uhOh: ["ISTP", "ESTP"]
+			},
+			"INTP": {
+				ideal: ["INFJ", "INTJ", "ENTP"],
+				good: ["ENFP", "INFP", "ENTJ"],
+				oneSided: ["ISFP", "INFP", "ISFJ"],
+				notIdeal: ["ESFP", "ESTJ", "ESFJ"],
+				uhOh: ["ESTP", "ISTJ"]
+			},
+			"ENTP": {
+				ideal: ["INFJ", "INTJ", "ENFP"],
+				good: ["ENFJ", "INFP", "ENTJ"],
+				oneSided: ["INTP", "ISFP", "ESTP"],
+				notIdeal: ["ISFJ", "ISTP", "ESFJ"],
+				uhOh: ["ESTJ"]
+			},
+			"ISFP": {
+				ideal: ["INFP", "ESFP", "ISTP"],
+				good: ["ENFJ", "ISFJ", "ESTP"],
+				oneSided: ["INFJ", "ENFP", "ISTJ"],
+				notIdeal: ["ENTJ", "INTJ", "ESFJ"],
+				uhOh: ["ESTJ", "ISTP"]
+			},
+			"ESFP": {
+				ideal: ["ISFP", "ESTP", "ISTP"],
+				good: ["ENFP", "ISFJ", "INFP"],
+				oneSided: ["INFJ", "ENFJ", "ESFJ"],
+				notIdeal: ["ENTJ", "INTJ", "ESTJ"],
+				uhOh: ["ISFJ"]
+			},
+			"ISTP": {
+				ideal: ["ISFP", "ESTP", "ISFJ"],
+				good: ["INTJ", "ENFP", "ISTJ"],
+				oneSided: ["INFJ", "ENFJ", "ESFP"],
+				notIdeal: ["ENTP", "ENTJ", "ESFJ"],
+				uhOh: ["ENFP", "ESTJ"]
+			},
+			"ESTP": {
+				ideal: ["ISFP", "ESFP", "ESTJ"],
+				good: ["ENFJ", "ISTP", "INFP"],
+				oneSided: ["ENFP", "INFJ", "ENTJ"],
+				notIdeal: ["ESFJ", "ISFJ", "INTP"],
+				uhOh: ["INTJ", "ISTJ"]
+			},
+			"ISFJ": {
+				ideal: ["ESFJ", "ESTJ", "ISFP"],
+				good: ["INFP", "ENFJ", "ISTP"],
+				oneSided: ["INFJ", "ENFP", "INTJ"],
+				notIdeal: ["ENTP", "ENTJ", "ESTP"],
+				uhOh: ["ISTJ"]
+			},
+			"ESFJ": {
+				ideal: ["ISFJ", "ESTJ", "ISFP"],
+				good: ["INFP", "ENFJ", "ESTP"],
+				oneSided: ["INFJ", "ENFP", "INTJ"],
+				notIdeal: ["ENTP", "ENTJ", "ISTP"],
+				uhOh: ["ISTJ"]
+			},
+			"ISTJ": {
+				ideal: ["ISFJ", "ESTJ", "ISFP"],
+				good: ["ENFJ", "INTP", "ESTP"],
+				oneSided: ["ENFP", "INFJ", "INTJ"],
+				notIdeal: ["ENTJ", "ESFP", "ISFP"],
+				uhOh: ["ENTP"]
+			},
+			"ESTJ": {
+				ideal: ["ISFJ", "ESFJ", "ISTP"],
+				good: ["INFJ", "ENFP", "INTP"],
+				oneSided: ["INFP", "ENFJ", "ENTJ"],
+				notIdeal: ["ISFP", "ESFP", "ESTP"],
+				uhOh: ["ENTP"]
+			}
+		};
+		
+		const mbtiToColor = {
+			"INFP": "Vert",
+			"ENFP": "Jaune",
+			"INFJ": "Vert",
+			"ENFJ": "Rouge",
+			"INTJ": "Bleu",
+			"ENTJ": "Rouge",
+			"INTP": "Bleu",
+			"ENTP": "Jaune",
+			"ISFP": "Vert",
+			"ESFP": "Jaune",
+			"ISTP": "Bleu",
+			"ESTP": "Jaune",
+			"ISFJ": "Vert",
+			"ESFJ": "Rouge",
+			"ISTJ": "Bleu",
+			"ESTJ": "Rouge"
+		};
 
         let selectedQuestions = [];
         let currentQuestionIndex = 0;
@@ -336,14 +469,59 @@
             return type;
         }
 
-        // Afficher le résultat
-        function showResult() {
-            const mbti = calculateResult();
-            typeSpan.textContent = mbti;
-            typeDescription.textContent = mbtiTypes[mbti] || "Description non disponible.";
-            questionnaire.style.display = 'none';
-            resultDiv.style.display = 'block';
-        }
+        // Fonction pour afficher les compatibilités
+		function showCompatibility(mbtiType) {
+			const compatibility = mbtiCompatibility[mbtiType];
+			if (!compatibility) return '';
+
+			let compatibilityHTML = '<h3>Compatibilité :</h3>';
+			compatibilityHTML += '<ul>';
+			compatibilityHTML += `<li><strong>Match Idéal :</strong> ${compatibility.ideal.join(', ')}</li>`;
+			compatibilityHTML += `<li><strong>Bon Match :</strong> ${compatibility.good.join(', ')}</li>`;
+			compatibilityHTML += `<li><strong>Match à sens unique :</strong> ${compatibility.oneSided.join(', ')}</li>`;
+			compatibilityHTML += `<li><strong>Pas idéal :</strong> ${compatibility.notIdeal.join(', ')}</li>`;
+			compatibilityHTML += `<li><strong>À éviter :</strong> ${compatibility.uhOh.join(', ')}</li>`;
+			compatibilityHTML += '</ul>';
+
+			return compatibilityHTML;
+		}
+
+		// Fonction pour afficher la couleur en fonction du type MBTI
+		function showColor(mbtiType) {
+			const color = mbtiToColor[mbtiType];
+			if (!color) return '';
+			
+			let colorCircle = '';
+			if (color === "Jaune") {
+				colorCircle = '<span style="display: inline-block; width: 20px; height: 20px; background-color: yellow; border-radius: 50%; margin-left: 10px;"></span>';
+			} else if (color === "Rouge") {
+				colorCircle = '<span style="display: inline-block; width: 20px; height: 20px; background-color: red; border-radius: 50%; margin-left: 10px;"></span>';
+			} else if (color === "Vert") {
+				colorCircle = '<span style="display: inline-block; width: 20px; height: 20px; background-color: green; border-radius: 50%; margin-left: 10px;"></span>';
+			} else if (color === "Bleu") {
+				colorCircle = '<span style="display: inline-block; width: 20px; height: 20px; background-color: blue; border-radius: 50%; margin-left: 10px;"></span>';
+			}
+
+			return `<h3>Ta couleur : ${color}${colorCircle}</h3>`;
+		}
+
+		// Modifier la fonction showResult pour inclure la couleur
+		function showResult() {
+			const mbti = calculateResult();
+			typeSpan.textContent = mbti;
+			typeDescription.innerHTML = mbtiTypes[mbti] || "Description non disponible.";
+			
+			// Ajouter la couleur après la description
+			const colorHTML = showColor(mbti);
+			typeDescription.innerHTML += colorHTML;
+
+			// Ajouter les compatibilités
+			const compatibilityHTML = showCompatibility(mbti);
+			typeDescription.innerHTML += compatibilityHTML;
+
+			questionnaire.style.display = 'none';
+			resultDiv.style.display = 'block';
+		}
 
         // Réinitialiser le questionnaire
         function resetQuiz() {
