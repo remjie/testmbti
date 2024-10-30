@@ -383,6 +383,29 @@
 			}
 		};
 		
+		const colorPersonality = {
+			"Jaune": {
+				description: "Les personnes de type Jaune sont optimistes, sociables et aiment interagir avec les autres. Elles sont généralement enthousiastes, créatives et aiment être au cœur des activités sociales.",
+				strengths: ["Énergie", "Créativité", "Communication"],
+				weaknesses: ["Désorganisation", "Manque de suivi"]
+			},
+			"Rouge": {
+				description: "Les personnes de type Rouge sont orientées vers l'action et les résultats. Elles sont compétitives, aiment prendre des décisions rapidement et ne craignent pas les défis.",
+				strengths: ["Leadership", "Prise de décision", "Résolution de problèmes"],
+				weaknesses: ["Impulsivité", "Dominance"]
+			},
+			"Vert": {
+				description: "Les personnes de type Vert sont calmes, empathiques et apprécient les relations harmonieuses. Elles préfèrent des environnements stables et sont motivées par le soutien aux autres.",
+				strengths: ["Écoute", "Harmonie", "Loyauté"],
+				weaknesses: ["Réticence au changement", "Passivité"]
+			},
+			"Bleu": {
+				description: "Les personnes de type Bleu sont analytiques, réfléchies et aiment la précision. Elles préfèrent les environnements organisés et structurés, et sont motivées par la logique et les faits.",
+				strengths: ["Précision", "Analyse", "Perfectionnisme"],
+				weaknesses: ["Rigidité", "Manque de spontanéité"]
+			}
+		};
+		
 		const mbtiToColor = {
 			"INFP": "Vert",
 			"ENFP": "Jaune",
@@ -469,21 +492,48 @@
             return type;
         }
 
-        // Fonction pour afficher les compatibilités
+		// Fonction pour afficher les compatibilités avec une astérisque colorée pour chaque type
 		function showCompatibility(mbtiType) {
 			const compatibility = mbtiCompatibility[mbtiType];
 			if (!compatibility) return '';
 
 			let compatibilityHTML = '<h3>Compatibilité :</h3>';
 			compatibilityHTML += '<ul>';
-			compatibilityHTML += `<li><strong>Partenaire Idéal :</strong> ${compatibility.ideal.join(', ')}</li>`;
-			compatibilityHTML += `<li><strong>Bon partenaire :</strong> ${compatibility.good.join(', ')}</li>`;
-			compatibilityHTML += `<li><strong>Amour à sens unique :</strong> ${compatibility.oneSided.join(', ')}</li>`;
-			compatibilityHTML += `<li><strong>Pas terrible :</strong> ${compatibility.notIdeal.join(', ')}</li>`;
-			compatibilityHTML += `<li><strong>C'est l'enfer :</strong> ${compatibility.uhOh.join(', ')}</li>`;
+			
+			compatibilityHTML += `<li><strong>⭐⭐⭐⭐⭐ :</strong> ${compatibility.ideal.map(coloredAsterisk).join(', ')}</li>`;
+			compatibilityHTML += `<li><strong>⭐⭐⭐⭐ :</strong> ${compatibility.good.map(coloredAsterisk).join(', ')}</li>`;
+			compatibilityHTML += `<li><strong>⭐⭐⭐ :</strong> ${compatibility.oneSided.map(coloredAsterisk).join(', ')}</li>`;
+			compatibilityHTML += `<li><strong>⭐⭐ :</strong> ${compatibility.notIdeal.map(coloredAsterisk).join(', ')}</li>`;
+			compatibilityHTML += `<li><strong>⭐ :</strong> ${compatibility.uhOh.map(coloredAsterisk).join(', ')}</li>`;
+
 			compatibilityHTML += '</ul>';
 
 			return compatibilityHTML;
+		}
+		
+		// Fonction pour afficher la couleur et ses détails (description, forces, faiblesses)
+		function showColorDetails(mbtiType) {
+			const color = mbtiToColor[mbtiType];
+			const colorDetails = colorPersonality[color];
+			if (!color || !colorDetails) return '';
+
+			let colorCircle = '';
+			if (color === "Jaune") {
+				colorCircle = '<span style="display: inline-block; width: 20px; height: 20px; background-color: yellow; border-radius: 50%; margin-left: 10px;"></span>';
+			} else if (color === "Rouge") {
+				colorCircle = '<span style="display: inline-block; width: 20px; height: 20px; background-color: red; border-radius: 50%; margin-left: 10px;"></span>';
+			} else if (color === "Vert") {
+				colorCircle = '<span style="display: inline-block; width: 20px; height: 20px; background-color: green; border-radius: 50%; margin-left: 10px;"></span>';
+			} else if (color === "Bleu") {
+				colorCircle = '<span style="display: inline-block; width: 20px; height: 20px; background-color: blue; border-radius: 50%; margin-left: 10px;"></span>';
+			}
+
+			return `
+				<h3>Ta couleur : ${color}${colorCircle}</h3>
+				<p>${colorDetails.description}</p>
+				<p><strong>Forces :</strong> ${colorDetails.strengths.join(', ')}</p>
+				<p><strong>Faiblesses :</strong> ${colorDetails.weaknesses.join(', ')}</p>
+			`;
 		}
 
 		// Fonction pour afficher la couleur en fonction du type MBTI
@@ -504,18 +554,38 @@
 
 			return `<h3>Ta couleur : ${color}${colorCircle}</h3>`;
 		}
+		
+		// Fonction pour afficher un type MBTI avec une astérisque colorée à côté
+		function coloredAsterisk(mbtiType) {
+			const color = mbtiToColor[mbtiType];
+			let colorStyle = '';
 
-		// Modifier la fonction showResult pour inclure la couleur
+			// Définir la couleur de l'astérisque en fonction du type MBTI
+			if (color === "Jaune") {
+				colorStyle = 'color: yellow;';
+			} else if (color === "Rouge") {
+				colorStyle = 'color: red;';
+			} else if (color === "Vert") {
+				colorStyle = 'color: green;';
+			} else if (color === "Bleu") {
+				colorStyle = 'color: blue;';
+			}
+
+			// Retourner le type MBTI avec l'astérisque colorée
+			return `${mbtiType} <span style="${colorStyle}">*</span>`;
+		}
+		
+		// Modifier la fonction showResult pour inclure la couleur, description, et le fond pour la compatibilité
 		function showResult() {
 			const mbti = calculateResult();
 			typeSpan.textContent = mbti;
 			typeDescription.innerHTML = mbtiTypes[mbti] || "Description non disponible.";
 			
-			// Ajouter la couleur après la description
-			const colorHTML = showColor(mbti);
+			// Ajouter la couleur, description, forces et faiblesses
+			const colorHTML = showColorDetails(mbti);
 			typeDescription.innerHTML += colorHTML;
 
-			// Ajouter les compatibilités
+			// Ajouter les compatibilités avec un fond coloré
 			const compatibilityHTML = showCompatibility(mbti);
 			typeDescription.innerHTML += compatibilityHTML;
 
